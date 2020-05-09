@@ -1,3 +1,4 @@
+from __future__ import annotations
 from pysqlcipher3 import dbapi2 as sqlite3  # import sqlite3
 from datetime import datetime
 
@@ -6,41 +7,43 @@ DATE_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S.000%z"
 
 
 class DB:
-    def __init__(self, path: str = DB_PATH):
+    def __init__(self, path, password: str = None):
         self._dateTimeFormat = DATE_TIME_FORMAT
         self._conn = sqlite3.connect(path)
-        self._c = self._conn.cursor()
+        self._cursor = self._conn.cursor()
+        if password != None:
+            self._cursor.execute('pragma key="{}"'.format(password))
 
     def __enter__(self) -> db:
         return self
 
     def get_entry(self, id: int) -> DB_Entry:
-        self.cursor.execute("""SELECT * FROM entries
+        self._cursor.execute("""SELECT * FROM entries
                                 WHERE id=? LIMIT 1""", (id,))
-        return DB_Entry(*self.cursor.fetchone())
+        return DB_Entry(*self._cursor.fetchone())
 
     def remove_entry(self, id: int):
-        self.cursor.execute("""DELETE FROM entries
+        self._cursor.execute("""DELETE FROM entries
                                 WHERE id=?;""", (id,))
 
     def get_all_entries(self) -> [DB_Entry]:
-        self.cursor.execute("""SELECT id FROM entries""")
-        unparsedEntries = self.cursor.fetchall()
+        self._cursor.execute("""SELECT id FROM entries""")
+        unparsedEntries = self._cursor.fetchall()
         return [self.get_entry(unparsedItem[0])
                 for unparsedItem in unparsedEntries]
 
     def get_entry_body(self, id: int) -> DB_Entry:
-        self.cursor.execute("""SELECT * FROM entry_bodies
+        self._cursor.execute("""SELECT * FROM entry_bodies
                                 WHERE id=? LIMIT 1""", (id,))
-        return DB_Entry_Body(*self.cursor.fetchone())
+        return DB_Entry_Body(*self._cursor.fetchone())
 
     def get_tag(self, id: int) -> DB_Tag:
-        self.cursor.execute("""SELECT * FROM tags
+        self._cursor.execute("""SELECT * FROM tags
                                     WHERE id=? LIMIT 1""", (id,))
-        return DB_Tag(*self.cursor.fetchone())
+        return DB_Tag(*self._cursor.fetchone())
 
     def remove_tag(self, id: int):
-        self.cursor.execute("""DELETE FROM tags
+        self._cursor.execute("""DELETE FROM tags
                                 WHERE id=?;""", (id,))
 
 

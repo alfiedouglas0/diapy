@@ -1,5 +1,4 @@
 from pysqlcipher3 import dbapi2 as sqlite3  # import sqlite3
-from utils import printSchema
 
 
 def create_db(path: str, password: str = None):

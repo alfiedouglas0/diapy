@@ -37,9 +37,7 @@ def create_db(path: str, password: str = None):
 
     c.execute("""CREATE TABLE entry_bodies (
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        entry_id INTEGER NOT NULL,
-        body TEXT,
-        FOREIGN KEY("entry_id") REFERENCES "entries"("id")
+        body TEXT
     )""")
 
     c.execute("""CREATE TABLE tags (

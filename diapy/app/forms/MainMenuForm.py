@@ -14,7 +14,7 @@ class MainMenuForm(npyscreen.FormBaseNew):
                                  use_two_lines=False, value="")
 
         self.add(npyscreen.ButtonPress, name="Exit", relx=12, rely=-3,
-                 when_pressed_function=lambda: exit())
+                 when_pressed_function=lambda: self.parentApp.switchForm(None))
         self.add(npyscreen.ButtonPress,
                  name="Create new db", relx=-40, rely=-3,
                  when_pressed_function=self.go_to_new_db)

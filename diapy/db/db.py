@@ -7,8 +7,9 @@ DATE_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S.000%z"
 
 
 class DB:
-    def __init__(self, path, password: str = None):
-        self._dateTimeFormat = DATE_TIME_FORMAT
+    def __init__(self, path, password: str = None,
+                 dateTimeFormat=DATE_TIME_FORMAT):
+        self._dateTimeFormat = dateTimeFormat
         self._conn = sqlite3.connect(path)
         self._cursor = self._conn.cursor()
         if password != None:

@@ -8,4 +8,8 @@ setup(
         'console_scripts': [
             'diapy = diapy.__main__:main'
         ]
-    })
+    },
+    install_requires=[
+        'npyscreen',
+        'pysqlcipher3'
+    ])

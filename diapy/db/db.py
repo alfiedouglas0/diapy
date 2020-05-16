@@ -37,7 +37,7 @@ class DB:
 
     def new_entry_body_pair(self):
         return DB_Entry(-1, datetime.now(), datetime.now(), datetime.now(),
-                        '', -1), DB_Entry_Body(-1, '')
+                        '', -1, 1), DB_Entry_Body(-1, '')
 
     def insert_or_update_entry(self, entry: DB_Entry) -> DB_Entry:
         if(entry.id < 0):  # means it does not in the db
@@ -64,8 +64,11 @@ class DB:
                                      entry.title, entry.entry_body_id, entry.id))
         return entry
 
-    def get_all_entries(self) -> [DB_Entry]:
-        self._cursor.execute("""SELECT id FROM entries""")
+    def get_all_entries(self, visible=True, ordered=True) -> [DB_Entry]:
+        self._cursor.execute("""SELECT id FROM entries {} {};""".format(
+            """WHERE visible != 0""" if visible else "",
+            """ORDER BY entry_date DESC""" if ordered else ""
+        ))
         unparsedEntries = self._cursor.fetchall()
         return [self.get_entry(unparsedItem[0])
                 for unparsedItem in unparsedEntries]
@@ -99,7 +102,8 @@ class DB:
 
 class DB_Entry:
     def __init__(self, id: int, entry_date: str, date_created: str,
-                 last_modified: str, title: str, entry_body_id: int):
+                 last_modified: str, title: str, entry_body_id: int,
+                 visible: int):
         self._id = id
         self._entry_date = datetime.strptime(
             entry_date, DATE_TIME_FORMAT) if isinstance(entry_date, str) else entry_date
@@ -109,6 +113,7 @@ class DB_Entry:
             last_modified, DATE_TIME_FORMAT) if isinstance(last_modified, str) else last_modified
         self._title = title
         self._entry_body_id = entry_body_id
+        self._visible = visible
 
     @property
     def id(self) -> int:
@@ -166,6 +171,15 @@ class DB_Entry:
     def entry_body_id(self, val):
         assert isinstance(val, int)
         self._entry_body_id = val
+
+    @property
+    def visible(self) -> int:
+        return self._visible
+
+    @visible.setter
+    def visible(self, val):
+        assert isinstance(val, int)
+        self._visible = val
 
 
 class DB_Tag:

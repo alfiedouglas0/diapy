@@ -1,4 +1,5 @@
-from pysqlcipher3 import dbapi2 as sqlite3  # import sqlite3
+from pysqlcipher3 import dbapi2 as sqlite3
+# import sqlite3
 
 
 def create_db(path: str, password: str = None):
@@ -10,6 +11,7 @@ def create_db(path: str, password: str = None):
                 3: last_modified(TEXT)
                 4: title(TEXT)
                 5: entry_body_id(INTEGER) not null
+                6: visible(INTEGER) not null default 1
             entry_bodies:
                 0: id(INTEGER) not null *1
                 1: entry_id(INTEGER) not null
@@ -32,6 +34,7 @@ def create_db(path: str, password: str = None):
         last_modified TEXT,
         title TEXT,
         entry_body_id INTEGER NOT NULL,
+        visible INTEGER NOT NULL DEFAULT 1,
         FOREIGN KEY("entry_body_id") REFERENCES "entry_bodies"("id")
     )""")
 

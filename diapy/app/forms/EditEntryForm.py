@@ -29,7 +29,7 @@ class EditEntryForm(npyscreen.FormBaseNew):
                                      relx=20, rely=2, max_height=5)
         self.body_widget = self.add(MultiLineEditBox, name='BODY', relx=3, rely=5,
                                     max_width=os.get_terminal_size()[0] - 6,
-                                    max_height=os.get_terminal_size()[1] - 15)
+                                    max_height=os.get_terminal_size()[1] - 9)
 
         self.add(npyscreen.ButtonPress, name="Exit", relx=3, rely=-3,
                  when_pressed_function=self.exit)
